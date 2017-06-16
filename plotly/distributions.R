@@ -1,6 +1,15 @@
 library(plotly)
-set_credentials_file("ggplot2-cookbook", "gzcn4660jr")
-py <- plotly();
+
+Sys.setenv("plotly_username"="XXXXXXXXXXX")
+Sys.setenv("plotly_api_key"="YYYYYYYYYYY")
+
+library(plotly)
+p <- plot_ly(midwest, x = ~percollege, color = ~state, type = "box")
+
+
+api_create(p, filename = "midwest-boxplots", sharing = "public")
+
+#################################################
 
 set.seed(1234)
 df <- data.frame(cond = factor( rep(c("A","B"), each=200) ),
@@ -21,15 +30,15 @@ library(ggplot2)
 # These both do the same thing:
 qplot(df$rating, binwidth=.5)
 g <- ggplot(df, aes(x=rating)) + geom_histogram(binwidth=.5)
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/basic-histogram'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='basic-histogram'))
 
 # Draw with black outline, white fill
 g <- ggplot(df, aes(x=rating)) + geom_histogram(binwidth=.5, colour="black", fill="white")
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/basic-histogram-white-filling'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='basic-histogram-white-filling'))
 
 # Density curve
 g <- ggplot(df, aes(x=rating)) + geom_density()
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/basic-density-curve'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='basic-density-curve'))
 
 # Histogram overlaid with kernel density curve
 g <- ggplot(df, aes(x=rating)) +
@@ -37,28 +46,28 @@ g <- ggplot(df, aes(x=rating)) +
                    binwidth=.5,
                    colour="black", fill="white") +
     geom_density(alpha=.2, fill="#FF6666")  # Overlay with transparent density plot
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/basic-density-curve-with-histogram'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='basic-density-curve-with-histogram'))
 
 g <- ggplot(df, aes(x=rating)) + geom_histogram(binwidth=.5, colour="black", fill="white") +
     geom_vline(aes(xintercept=mean(rating, na.rm=T)),   # Ignore NA values for mean
                color="red", linetype="dashed", size=1)
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/histogram-with-vertical-line'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='histogram-with-vertical-line'))
 
 # Overlaid histograms
 g <- ggplot(df, aes(x=rating, fill=cond)) + geom_histogram(binwidth=.5, alpha=.5, position="identity")
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/overlaid-histograms'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='overlaid-histograms'))
 
 # Interleaved histograms
 g <- ggplot(df, aes(x=rating, fill=cond)) + geom_histogram(binwidth=.5, position="dodge")
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/grouped-histograms'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='grouped-histograms'))
 
 # Density plots
 g <- ggplot(df, aes(x=rating, colour=cond)) + geom_density()
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/multiple-density-plots'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='multiple-density-plots'))
 
 # Density plots with semi-transparent fill
 g <- ggplot(df, aes(x=rating, fill=cond)) + geom_density(alpha=.3)
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/filled-density-plots'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='filled-density-plots'))
 
 # Find the mean of each group
 library(plyr)
@@ -73,44 +82,44 @@ g <- ggplot(df, aes(x=rating, fill=cond)) +
     geom_histogram(binwidth=.5, alpha=.5, position="identity") +
     geom_vline(data=cdf, aes(xintercept=rating.mean,  colour=cond),
                linetype="dashed", size=1)
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/overlaid-histograms-with-means'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='overlaid-histograms-with-means'))
 
 # Density plots with means
 g <- ggplot(df, aes(x=rating, colour=cond)) + geom_density() +
     geom_vline(data=cdf, aes(xintercept=rating.mean,  colour=cond),
                linetype="dashed", size=1)
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/density-plot-with-means'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='density-plot-with-means'))
 
 g <- ggplot(df, aes(x=rating)) + geom_histogram(binwidth=.5, colour="black", fill="white") +
     facet_grid(cond ~ .)
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/faceted-histograms'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='faceted-histograms'))
 
 # With mean lines, using cdf from above
 g <- ggplot(df, aes(x=rating)) + geom_histogram(binwidth=.5, colour="black", fill="white") +
     facet_grid(cond ~ .) +
     geom_vline(data=cdf, aes(xintercept=rating.mean),
                linetype="dashed", size=1, colour="red")
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/faceted-histograms-with-mean-lines'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='faceted-histograms-with-mean-lines'))
 
 # A basic box plot
 g <- ggplot(df, aes(x=cond, y=rating)) + geom_boxplot()
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/basic-box-plot'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='basic-box-plot'))
 
 # A basic box with the conditions colored
 g <- ggplot(df, aes(x=cond, y=rating, fill=cond)) + geom_boxplot()
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/box-plot-with-conditions-colored'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='box-plot-with-conditions-colored'))
 
 # The above adds a redundant legend. With the legend removed:
 g <- ggplot(df, aes(x=cond, y=rating, fill=cond)) + geom_boxplot() +
     guides(fill=FALSE)
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/box-plot-with-legend-removed'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='box-plot-with-legend-removed'))
 
 # With flipped axes
 g <- ggplot(df, aes(x=cond, y=rating, fill=cond)) + geom_boxplot() +
     guides(fill=FALSE) + coord_flip()
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/box-plot-with-flipped-axes'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='box-plot-with-flipped-axes'))
 
 # Add a diamond at the mean, and make it larger
 g <- ggplot(df, aes(x=cond, y=rating)) + geom_boxplot() +
     stat_summary(fun.y=mean, geom="point", shape=5, size=4)
-py$ggplotly(g, kwargs=list(fileopt='overwrite', filename='R-Cookbook/distributions/box-plot-with-diamond-means'))
+api_create(g, kwargs=list(fileopt='overwrite', filename='box-plot-with-diamond-means'))
